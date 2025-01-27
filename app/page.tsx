@@ -14,8 +14,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import logo from './assets/logo.svg';
 import womanImg from './assets/woman.svg';
+import {auth} from "@/auth";
 
 export default async function Home() {
+
+  const session = await auth();
+  const username = session?.user?.name ?? '';
+
   return (
     <main>
       <section className="container mx-auto text-center pb-20 px-2 md:px-0">
@@ -46,13 +51,18 @@ export default async function Home() {
             <Link href={'#preco'}>
               <Button variant={'link'}>Preço</Button>
             </Link>
-            <Link href="/login">
+            {session && <Link href="/dashboard">
+              <Button variant={'bg-white'}>Dashboard</Button>
+            </Link>
+            }
+            {!session && <Link href="/login">
               <Button variant={'bg-white'}>Login</Button>
             </Link>
+            }
           </div>
         </nav>
         <h1 className="md:text-6xl text-2xl font-bold mt-8 md:mt-16">
-          Simplifique Seus Estudos{' '}
+          {username && `${username},` } Simplifique Seus Estudos{' '}
         </h1>
         <p className="text-gray-500 mt-4 text-sm md:text-xl max-w-3xl mx-auto">
           Deixe que nós fazemos a curadoria para você. Assine nossa plataforma e
